@@ -1,9 +1,9 @@
 instance, makespan,solver
-jb01,,
+jb01,320,dfs
 jb02,,
-jb03,370,dfs
-jb04,,
-jb05,,
+jb03,,
+jb04,318,dfs
+jb05,370,dfs
 jb06,,
 jb07,,
 jb08,,
