@@ -104,6 +104,9 @@ class JobShopDFS:
 
 
 class JobShopUCS:
+    """
+        A Uniform Cost Search (UCS) with pruning for the Job Shop Scheduling Problem (JSSP).
+    """
     def __init__(self, jssp_data, verbose=True):
         self.data = jssp_data
         self.num_jobs = self.data.job_count()
@@ -118,6 +121,8 @@ class JobShopUCS:
         self.start_time = 0
         self.time_limit = None
 
+        self.exp_nodes = 0  # Counter for expanded nodes
+
     def solve(self, time_limit=None):
         self.start_time = time.time()
         self.time_limit = time_limit
@@ -128,7 +133,8 @@ class JobShopUCS:
         except TimeoutException:
             print(f"\n[!] Time limit reached ({self.time_limit}s). Stopping search.")
     
-        return self.best_makespan, self.best_schedule
+        print(f"Total expanded nodes: {self.exp_nodes}")
+        return {"makespan": self.best_makespan, "expanded_nodes": self.exp_nodes}, self.best_schedule
 
     def _ucs(self):
         # Priority Queue stores tuples:
@@ -150,7 +156,8 @@ class JobShopUCS:
             # Control de límite de tiempo
             if (self.time_limit is not None and (time.time() - self.start_time) > self.time_limit):
                 raise TimeoutException()
-            
+
+            self.exp_nodes += 1 # Update the count of expanded nodes
             (cost, _, next_op, machine_free, job_free, current_schedule,) = heapq.heappop(pq)
 
             # Prunning: Si el costo acumulado de este nodo ya alcanza o supera la mejor solución global, se ignora

@@ -7,20 +7,18 @@ Also, all the results are saved in the logs file in the 'solutions' folder.
 
 # Import the necessary modules to run the experiment
 from uninformed.jssp import JobShopData as Jssp
-from uninformed.solver import JobShopDFS as Solver
+# from uninformed.solver import JobShopUCS as Solver
+from heuristic.solver import JobShopBeamSearch as Solver
 from datetime import datetime
 import time
 import pandas as pd
 import os
 
-def main(instances_path = "instances", solutions_path = "solutions", algorithm="uninformed-dfs", seed=None, tl=60):
+def main(instances_path = "instances", solutions_path = "solutions", algorithm="heuristic-bs", seed=None, tl=60):
     # Lists to store the log information for each instance
-    timestamps = []
-    makespans = []
-    runtimes = []
-    expanded_nodes_list = []
+    log_entries = []
     instances = [f.split('.')[0] for f in os.listdir(instances_path) if os.path.isfile(os.path.join(instances_path, f)) and f.endswith('.txt')]
-    # instances = instances[:10]  # Limit to the first 10 instances for testing purposes
+    # instances = instances[0:3]  # Limit to the first 5 jb instances for testing purposes
 
     print(f"[i] {len(instances)} instances found. Running {algorithm}...")
     
@@ -39,7 +37,7 @@ def main(instances_path = "instances", solutions_path = "solutions", algorithm="
         print("-" * 30)
         
         # 2. Initialize the solver with the parsed data
-        solver = Solver(jssp_instance)
+        solver = Solver(jssp_instance, beam_width=100)
         
         # 3. Run the solver...
         print("Excecuting solver...")
@@ -47,15 +45,11 @@ def main(instances_path = "instances", solutions_path = "solutions", algorithm="
         start = time.perf_counter() # Start measuring time
         results, schedule = solver.solve(time_limit=tl)
 
-        # Extract the results
-        makespan = results["makespan"]
-        expanded_nodes = results["expanded_nodes"]
-        
         # 4. Output results
         end = time.perf_counter()
         print("-" * 30)
         print(f"Execution time: {end - start} s") 
-        print(f"Best makespan found: {makespan}")
+        print(f"Solver results: {results}")
 
         # Check if a valid schedule was found...
         if schedule:
@@ -71,23 +65,19 @@ def main(instances_path = "instances", solutions_path = "solutions", algorithm="
         else:
             print("[!] No valid schedule found.")
 
-        # Record the log information for this instance
-        timestamps.append(now.strftime("%Y-%m-%d %H:%M:%S"))
-        makespans.append(makespan)
-        runtimes.append(end - start)
-        expanded_nodes_list.append(expanded_nodes)
+        # Keep solver-specific metrics alongside the experiment metadata.
+        log_entries.append({
+            **results,
+            "timestamp": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "algorithm": algorithm,
+            "instance": name,
+            "time_limit": tl,
+            "seed": seed,
+            "runtime": end - start
+        })
 
     # Save the logs to a CSV file
-    new_logs = pd.DataFrame({
-        "timestamp": timestamps,
-        "algorithm": [algorithm] * len(instances),
-        "instance": instances,
-        "time_limit": [tl] * len(instances),
-        "seed": [seed] * len(instances),
-        "makespan": makespans,
-        "runtime": runtimes,
-        "expanded_nodes": expanded_nodes_list
-    })
+    new_logs = pd.DataFrame(log_entries)
     logs_path = "solutions/logs.csv"
     logs = pd.read_csv(logs_path)
     logs = pd.concat([logs, new_logs])

@@ -79,6 +79,6 @@ la37,,
 la38,,
 la39,,
 la40,,
-ft06,,
-ft10,,
-ft20,,
+ft06,55,cplex
+ft10,930,cplex
+ft20,1165,cplex

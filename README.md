@@ -17,6 +17,15 @@ Solving the JSSP through uninformed, heuristic, local search, and CSP approach.
 
 #### UCS
 
+### Heuristic
+
+
+#### Heuristic A
+
+#### Heuristic B
+
+
+
 ## Logs
 
 ## Optimals
