@@ -1,7 +1,6 @@
 import heapq
 import time
 
-
 class TimeoutException(Exception):
     """
     Personalized exception to cease the search when a timeout is reached.
@@ -53,6 +52,39 @@ def combined_bound_heuristic(jssp_data, next_op, machine_free, job_free):
 
 
 
+def mwrm_heuristic(jssp_data, next_op, machine_free, job_free):
+    """
+    Función heurística 'Most Work Remaining on Machine' (MWRM) para JSSP.
+    Calcula la carga total de trabajo pendiente para cada máquina considerando
+    todas las operaciones aún no agendadas de todos los trabajos, sumada al tiempo
+    de liberación actual de la máquina (machine_free[m]).
+    """
+    num_jobs = jssp_data.job_count()
+    num_machines = jssp_data.machine_count()
+
+    # Makespan parcial acumulado g(S)
+    g_val = max(max(job_free), max(machine_free)) if (job_free and machine_free) else 0
+
+    # Acumular la duración de todas las operaciones pendientes asignadas a cada máquina
+    machine_work = [0] * num_machines
+    for j in range(num_jobs):
+        tasks = jssp_data.tasks_of_job(j)
+        op_idx = next_op[j]
+        for k in range(op_idx, len(tasks)):
+            machine, duration = tasks[k]
+            machine_work[machine] += duration
+
+    # Determinar el tiempo mínimo estimado para que finalice la máquina más saturada
+    max_machine_completion = 0
+    for m in range(num_machines):
+        total_machine_time = machine_free[m] + machine_work[m]
+        if total_machine_time > max_machine_completion:
+            max_machine_completion = total_machine_time
+
+    # El costo restante h(S) es la diferencia entre el cuello de botella por máquina y g(S)
+    h_val = max(0, max_machine_completion - g_val)
+    return h_val
+
 
 
 class JobShopWeightedAStar:
@@ -63,7 +95,7 @@ class JobShopWeightedAStar:
     - weight (w): Peso aplicado a la heurística f(S) = g(S) + w * h(S).
     - heuristic_fn: Función heurística a utilizar.
     """
-    def __init__(self, jssp_data, weight=1.0, heuristic_fn=combined_bound_heuristic, verbose=True):
+    def __init__(self, jssp_data, weight=1.0, heuristic_fn=mwrm_heuristic, verbose=True):
         self.data = jssp_data
         self.num_jobs = self.data.job_count()
         self.num_machines = self.data.machine_count()
