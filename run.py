@@ -6,9 +6,9 @@ Also, all the results are saved in the logs file in the 'solutions' folder.
 """
 
 # Import the necessary modules to run the experiment
-from jssp import JobShopData as Jssp
+from jssp.jssp import JobShopData as Jssp
 # from uninformed.solver import JobShopUCS as Solver
-from local.solver import SimulatedAnnealing as Solver
+from jssp.local.solver import SimulatedAnnealing as Solver
 from datetime import datetime
 import time
 import pandas as pd

@@ -1,5 +1,5 @@
-from jssp import JobShopData
-from solver import JobShopDFS
+from jssp.jssp import JobShopData
+from jssp.uninformed.solver import JobShopDFS
 import time
  
 

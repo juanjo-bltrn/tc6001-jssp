@@ -2,7 +2,7 @@ import math
 import random
 import time
 
-from local.noperators import (
+from jssp.local.noperators import (
     swap_adjacent_operator,
     random_swap_operator,
     shift_reinsertion_operator,
