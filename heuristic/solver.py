@@ -1,6 +1,6 @@
 import heapq
 import time
-from heuristics import combined_bound_heuristic, mwrm_heuristic
+from heuristic.heuristics import combined_bound_heuristic, mwrm_heuristic
 
 class TimeoutException(Exception):
     """

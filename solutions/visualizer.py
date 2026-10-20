@@ -115,7 +115,7 @@ def plot_jssp_schedule(file_path: str, save_path: str = None, show: bool = False
             'hatch': hatches[i % len(hatches)]
         }
 
-    fig, ax = plt.subplots(figsize=(12, 5.5), dpi=120)
+    fig, ax = plt.subplots(figsize=(25, 11), dpi=120)
     
     # Machines in inverted y-axis
     m_to_y = {m: len(machines) - 1 - idx for idx, m in enumerate(machines)}
@@ -202,9 +202,9 @@ def plot_jssp_schedule(file_path: str, save_path: str = None, show: bool = False
 
 if __name__ == "__main__":
     # Paths
-    instance = "la01"
-    file_path = f"solutions/uninformed-dfs/{instance}.txt"
-    save_path = f"solutions/uninformed-dfs/schedule-{instance}.png"
+    instance = "la40"
+    file_path = f"solutions/local-sa/{instance}.txt"
+    save_path = f"solutions/local-sa/schedule-{instance}.png"
     
     # Plot and save
     plot_jssp_schedule(file_path, save_path=save_path, show=False)

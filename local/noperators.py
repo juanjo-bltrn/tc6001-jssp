@@ -46,8 +46,8 @@ def shift_reinsertion_operator(state):
 
 def two_opt_operator(state):
     """
-    Operador 2-Opt (Inversión de Subsecuencia):
-    Invierte el orden del segmento comprendido entre dos índices aleatorios.
+    Operador 2-Opt (invertir una subsecuencia):
+    Invierte el orden del segmento comprendido entre dos índices aleatorios. Importado del TSP.
     """
     neighbor = list(state)
     n = len(neighbor)

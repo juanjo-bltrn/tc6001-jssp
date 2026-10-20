@@ -2,7 +2,7 @@ import math
 import random
 import time
 
-from operators import (
+from local.noperators import (
     swap_adjacent_operator,
     random_swap_operator,
     shift_reinsertion_operator,
@@ -71,7 +71,7 @@ class SimulatedAnnealing:
     """
 
     def __init__(self, jssp_data, initial_temp=1000.0, cooling_rate=0.995, min_temp=1e-3, max_iterations=50000, 
-                 neighborhood_op=shift_reinsertion_operator, seed=31, verbose=True, 
+                 neighborhood_op=two_opt_operator, seed=31, verbose=True, 
                  ):
         self.data = jssp_data
         self.num_jobs = self.data.job_count()
@@ -194,5 +194,5 @@ class SimulatedAnnealing:
                             f"New best makespan found: {self.best_makespan} | Temp: {current_temp:.2f} | Iter: {self.iterations_count}"
                         )
 
-            # Esquema de enfriamiento geométrico
+            # Enfriamiento
             current_temp *= self.cooling_rate
