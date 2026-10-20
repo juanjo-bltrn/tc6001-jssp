@@ -9,6 +9,9 @@ class TimeoutException(Exception):
     """
     pass
 
+# ==============================================================================
+#                   Uninformed search algorithms for JSSP
+# ==============================================================================
 
 class JobShopDFS:
     """

@@ -6,20 +6,20 @@ Also, all the results are saved in the logs file in the 'solutions' folder.
 """
 
 # Import the necessary modules to run the experiment
-from uninformed.jssp import JobShopData as Jssp
+from jssp import JobShopData as Jssp
 # from uninformed.solver import JobShopUCS as Solver
-from heuristic.solver import JobShopWeightedAStar as Solver
+from local.solver import SimulatedAnnealing as Solver
 from datetime import datetime
 import time
 import pandas as pd
 import os
 
-def main(instances_path = "instances", solutions_path = "solutions", algorithm="heuristic-wa", seed=None, tl=60):
+def main(instances_path = "instances", solutions_path = "solutions", algorithm="local-sa", seed=None, tl=60):
     codename = ""
     # Lists to store the log information for each instance
     log_entries = []
     instances = [f.split('.')[0] for f in os.listdir(instances_path) if os.path.isfile(os.path.join(instances_path, f)) and f.endswith('.txt')]
-    # instances = instances[-8:]  # Limit to the first 5 jb instances for testing purposes
+    instances = instances[3:8]  # Limit to the first 5 jb instances for testing purposes
 
     print(f"[i] {len(instances)} instances found. Running {algorithm}...")
     
@@ -38,7 +38,7 @@ def main(instances_path = "instances", solutions_path = "solutions", algorithm="
         print("-" * 30)
         
         # 2. Initialize the solver with the parsed data
-        solver = Solver(jssp_instance, weight=1000.0)
+        solver = Solver(jssp_instance, seed=42)
         
         # 3. Run the solver...
         print("Excecuting solver...")
