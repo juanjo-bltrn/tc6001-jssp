@@ -17,7 +17,7 @@ def main(instances_path = "instances", solutions_path = "solutions", algorithm="
     # Lists to store the log information for each instance
     log_entries = []
     instances = [f.split('.')[0] for f in os.listdir(instances_path) if os.path.isfile(os.path.join(instances_path, f)) and f.endswith('.txt')]
-    instances = instances[3:43]  # Limit to the first 5 jb instances for testing purposes
+    instances = instances[3:13]  # Limit to the first 5 jb instances for testing purposes
 
     print(f"[i] {len(instances)} instances found. Running {algorithm}...")
     
