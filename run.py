@@ -7,13 +7,13 @@ Also, all the results are saved in the logs file in the 'solutions' folder.
 
 # Import the necessary modules to run the experiment
 from jssp.jssp import JobShopData as Jssp
-from jssp.milp.solver import milpSolver as Solver
+from jssp.local.solver import SimulatedAnnealing as Solver
 from datetime import datetime
 import time
 import pandas as pd
 import os
 
-def main(instances_path = "instances", solutions_path = "solutions", algorithm="milp", seed=None, tl=None):
+def main(instances_path = "instances", solutions_path = "solutions", algorithm="local-sa", seed=42, tl=60):
     # Lists to store the log information for each instance
     log_entries = []
     instances = [f.split('.')[0] for f in os.listdir(instances_path) if os.path.isfile(os.path.join(instances_path, f)) and f.endswith('.txt')]
@@ -36,13 +36,13 @@ def main(instances_path = "instances", solutions_path = "solutions", algorithm="
         print("-" * 30)
         
         # 2. Initialize the solver with the parsed data
-        solver = Solver(jssp_instance)
+        solver = Solver(jssp_instance, cooling_rate=0.999, seed=seed)
         
         # 3. Run the solver...
         print("Excecuting solver...")
         now = datetime.now()
         start = time.perf_counter() # Start measuring time
-        results, schedule = solver.solve()
+        results, schedule = solver.solve(time_limit=tl)
 
         # 4. Output results
         end = time.perf_counter()
